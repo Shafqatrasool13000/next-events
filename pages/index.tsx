@@ -1,14 +1,25 @@
-import React from 'react'
-import EventsList from '../components/events/event-list';
-import { getFeaturedEvents } from '../dummy-data'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import useSWR from "swr";
+import EventsList from "../components/events/event-list";
+import { getFeaturedEvents } from "../helpers/api-utils";
 
-const Homepage = () => {
-    const featuredEvents=getFeaturedEvents();
+const Homepage = ({ featureEvents }: any) => {
   return (
     <>
-        <EventsList features={featuredEvents}/>
+      <EventsList features={featureEvents} />
     </>
-  )
-}
+  );
+};
 
-export default Homepage
+export const getStaticProps = async () => {
+  const featureEvents = await getFeaturedEvents();
+  return {
+    props: {
+      featureEvents,
+      revalidate: 60,
+    },
+  };
+};
+
+export default Homepage;
